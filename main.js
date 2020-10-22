@@ -92,7 +92,6 @@ function checking(box) {
 // delete individual todo list item
 function deleteItem(delBtn) {
     let itemId = parseInt(delBtn.parentElement.id);
-    console.log(itemId);
     todoArray.splice(itemId, 1);
     displayTodoList(todoArray); // calling the display function
     writeToStorage(); // calling the write storage function
@@ -137,7 +136,7 @@ deleteBtn.addEventListener("click", function () {
 // edit a todo item's text (rename)
 function renameItem(liItem) {
     let id = liItem.parentElement.id;
-    let newText = prompt("Enter the new text:");
+    let newText = prompt("Enter the new text:", todoArray[id].text);
     if (newText !== "" && newText !== null) {
         todoArray[id].text = newText;
         displayTodoList(todoArray); // calling the display function
