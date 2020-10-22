@@ -4,9 +4,10 @@ font-family: 'Grandstander', cursive; */
 
 html {
     user-select: none;
-    --main-color: rgb(59, 80, 128);
+    --main-color: rgb(70, 100, 145);
     --list-odd-color: rgba(123, 196, 255, 0.2);
     --list-even-color: rgba(123, 196, 255, 0.1);
+    --inactive-color: rgb(200, 200, 200);
 }
 
 body {
@@ -35,24 +36,39 @@ li {
     margin-right: 20px;
 }
 
-i {
-    margin: 0;
-    color: red;
-    font-size: 1rem;
+button,
+button:active {
+    width: 3.6rem;
+    height: 2.8rem;
+    outline: none;
+    background: none;
+    border: none;
 }
 
-button {
-    outline: none;
+button:hover i {
+    font-size: 2.5rem;
+}
+
+button:active i {
+    font-size: 1.8rem;
 }
 
 .main-wrapper {
-    margin: 5vh 5vw;
+    margin: 5vh auto;
+    width: 90vw;
+    max-width: 600px;
 }
 
 .list-cont {
     padding: 0;
     border-radius: 0.4rem;
     overflow: hidden;
+}
+
+.list-cont i {
+    margin: 0;
+    color: red;
+    font-size: 1rem;
 }
 
 .item-cont {
@@ -73,8 +89,17 @@ button {
 .btn-container {
     display: grid;
     grid-gap: 10px;
+    grid-template-columns: repeat(3, auto);
+    justify-content: center;
+}
+
+.btn-container i {
+    margin: 0;
+    color: var(--main-color);
+    font-size: 2rem;
 }
 
 .checked {
     text-decoration: line-through;
+    color: var(--inactive-color);
 }
