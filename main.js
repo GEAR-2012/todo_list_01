@@ -81,7 +81,7 @@ function writeToStorage() {
     localStorage.setItem("todoList", toStorage);
 }
 
-// call back when a checkbox is got checked
+// call back when a checkbox is checked
 function checking(box) {
     todoArray[parseInt(box.parentElement.id)].checked = box.checked; // update checked state
     let todoTextItem = box.nextElementSibling;
