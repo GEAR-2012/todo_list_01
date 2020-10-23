@@ -35,40 +35,74 @@ function displayTodoList(listArr) {
     todoListCont.innerHTML = "";
     if (listArr.length !== 0) {
         listArr.forEach(function (item, index) {
-            // create a div as a todo item container
-            let newDiv = document.createElement("div");
-            newDiv.setAttribute("id", index);
-            newDiv.classList.add("item-cont");
+            /*
+                <li class="list-item">
+                    <div class="chkbox-cont">
+                        <label class="chkbox-lbl" for="chk-1"></label>
+                        <input class="chkbox" id="chk-1" type="checkbox" />
+                        <i class="icon-unchecked far fa-circle"></i>
+                        <i class="icon-checked fas fa-check-circle"></i>
+                    </div>
+                    <p class="item-text">Item gyaj One</p>
+                    <i class="icon-delete fas fa-minus-circle"></i>
+                </li>
+
+            */
+            // create a li item as a todo item container
+            let newLi = document.createElement("li");
+            newLi.setAttribute("id", index);
+            newLi.classList.add("list-item");
+            // create a conteiner for checkbox
+            let newChkBoxCont = document.createElement("div");
+            newChkBoxCont.classList.add("chkbox-cont");
+            // set tooltip
+            newChkBoxCont.setAttribute("title", "check/uncheck this entry");
+            // create a label element for (checkbox)
+            let newLbl = document.createElement("label");
+            newLbl.classList.add("chkbox-lbl");
+            newLbl.setAttribute("for", `chk-${index}`);
             // create an input element (checkbox)
             let newChkBox = document.createElement("input");
+            newChkBox.classList.add("chkbox");
+            newChkBox.setAttribute("id", `chk-${index}`);
             newChkBox.setAttribute("type", "checkbox");
             newChkBox.setAttribute("onclick", "checking(this)");
             newChkBox.checked = item.checked;
-            // set tooltip
-            newChkBox.setAttribute("title", "check/uncheck this entry");
-
-            // create a list item with a todo item text
-            let newLi = document.createElement("li");
-            newLi.textContent = item.text;
-            newLi.setAttribute("onclick", "renameItem(this)");
-            // get info from the todoArray if the todo item was checked earlier
+            // create an i element for unchecked icon
+            let newIconUnchecked = document.createElement("i");
+            newIconUnchecked.classList.add("icon-unchecked", "far", "fa-circle");
+            // create an i element for checked icon
+            let newIconChecked = document.createElement("i");
+            newIconChecked.classList.add("icon-checked", "fas", "fa-check-circle");
+            // create a p item with a todo item text
+            let newListText = document.createElement("p");
+            newListText.textContent = item.text;
+            newListText.classList.add("item-text");
+            newListText.setAttribute("onclick", "renameItem(this)");
+            /* give states for items based on the todo array checked attribue*/
             if (item.checked === true) {
-                newLi.classList.add("checked");
+                newIconUnchecked.classList.add("hide");
+                newListText.classList.add("checked");
+            } else {
+                newIconChecked.classList.add("hide");
             }
             // set tooltip
-            newLi.setAttribute("title", "rename this entry");
-
+            newListText.setAttribute("title", "rename this entry");
             // create a delete button
             let newDelBtn = document.createElement("i");
-            newDelBtn.classList.add("fas", "fa-backspace");
+            newDelBtn.classList.add("icon-delete", "fas", "fa-minus-circle");
             newDelBtn.setAttribute("onclick", "deleteItem(this)");
             // set tooltip
             newDelBtn.setAttribute("title", "delete this entry");
             // construct the new todo item and add to the list container
-            newDiv.appendChild(newChkBox);
-            newDiv.appendChild(newLi);
-            newDiv.appendChild(newDelBtn);
-            todoListCont.appendChild(newDiv);
+            newChkBoxCont.appendChild(newLbl);
+            newChkBoxCont.appendChild(newChkBox);
+            newChkBoxCont.appendChild(newIconUnchecked);
+            newChkBoxCont.appendChild(newIconChecked);
+            newLi.appendChild(newChkBoxCont);
+            newLi.appendChild(newListText);
+            newLi.appendChild(newDelBtn);
+            todoListCont.appendChild(newLi);
         });
     } else {
         basicMessage();
@@ -81,11 +115,17 @@ function writeToStorage() {
     localStorage.setItem("todoList", toStorage);
 }
 
-// call back when a checkbox is checked
+// cross through an item
 function checking(box) {
-    todoArray[parseInt(box.parentElement.id)].checked = box.checked; // update checked state
-    let todoTextItem = box.nextElementSibling;
-    todoTextItem.classList.toggle("checked"); // update css class
+    let listItemId = parseInt(box.parentElement.parentElement.id);
+    todoArray[listItemId].checked = box.checked; // update checked state in the todo array
+    let todoTextItem = box.parentElement.parentElement.childNodes[1]; // get the actual text item
+    let iconUnchecked = box.parentElement.childNodes[2]; // get the actual unchecked icon
+    let iconChecked = box.parentElement.childNodes[3]; // get the actual checked icon
+    // update css classes based on states
+    iconUnchecked.classList.toggle("hide"); // update css class on icon unchecked
+    iconChecked.classList.toggle("hide"); // update css class on icon checked
+    todoTextItem.classList.toggle("checked"); // update css class on list text
     writeToStorage(); // calling the write storage function
 }
 
