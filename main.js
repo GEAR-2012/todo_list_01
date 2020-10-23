@@ -18,9 +18,9 @@ function readFromStorage() {
     if (fromStorage !== null) {
         fromStorage = JSON.parse(fromStorage);
         todoArray.push(...fromStorage);
-        displayTodoList(todoArray); // calling the display function
+        displayTaskList(todoArray); // calling the display function
     } else {
-        basicMessage();
+        noTaskMessage();
     }
 }
 
@@ -31,13 +31,13 @@ readFromStorage();
     - the application started
     - new entry created
     */
-function displayTodoList(listArr) {
+function displayTaskList(listArr) {
     todoListCont.innerHTML = "";
     if (listArr.length !== 0) {
         listArr.forEach(function (item, index) {
             /*
             LIST ITEM TEMPLATE:
-            
+
                 <li class="list-item">
                     <div class="chkbox-cont">
                         <label class="chkbox-lbl" for="chk-1"></label>
@@ -68,7 +68,7 @@ function displayTodoList(listArr) {
             newChkBox.classList.add("chkbox");
             newChkBox.setAttribute("id", `chk-${index}`);
             newChkBox.setAttribute("type", "checkbox");
-            newChkBox.setAttribute("onclick", "checking(this)");
+            newChkBox.setAttribute("onclick", "taskDone(this)");
             newChkBox.checked = item.checked;
             // create an i element for unchecked icon
             let newIconUnchecked = document.createElement("i");
@@ -80,7 +80,7 @@ function displayTodoList(listArr) {
             let newListText = document.createElement("p");
             newListText.textContent = item.text;
             newListText.classList.add("item-text");
-            newListText.setAttribute("onclick", "renameItem(this)");
+            newListText.setAttribute("onclick", "taskRename(this)");
             /* give states for items based on the todo array checked attribue*/
             if (item.checked === true) {
                 newIconUnchecked.classList.add("hide");
@@ -93,7 +93,7 @@ function displayTodoList(listArr) {
             // create a delete button
             let newDelBtn = document.createElement("i");
             newDelBtn.classList.add("icon-delete", "fas", "fa-minus-circle");
-            newDelBtn.setAttribute("onclick", "deleteItem(this)");
+            newDelBtn.setAttribute("onclick", "taskDelete(this)");
             // set tooltip
             newDelBtn.setAttribute("title", "delete this entry");
             // construct the new todo item and add to the list container
@@ -107,7 +107,7 @@ function displayTodoList(listArr) {
             todoListCont.appendChild(newLi);
         });
     } else {
-        basicMessage();
+        noTaskMessage();
     }
 }
 
@@ -118,7 +118,7 @@ function writeToStorage() {
 }
 
 // cross through an item
-function checking(box) {
+function taskDone(box) {
     let listItemId = parseInt(box.parentElement.parentElement.id);
     todoArray[listItemId].checked = box.checked; // update checked state in the todo array
     let todoTextItem = box.parentElement.parentElement.childNodes[1]; // get the actual text item
@@ -132,10 +132,10 @@ function checking(box) {
 }
 
 // delete individual todo list item
-function deleteItem(delBtn) {
+function taskDelete(delBtn) {
     let itemId = parseInt(delBtn.parentElement.id);
     todoArray.splice(itemId, 1);
-    displayTodoList(todoArray); // calling the display function
+    displayTaskList(todoArray); // calling the display function
     writeToStorage(); // calling the write storage function
 }
 
@@ -144,7 +144,7 @@ addBtn.addEventListener("click", function () {
     let newItemText = prompt("To Do:"); // ask for new entry
     if (newItemText !== "" && newItemText !== null) {
         todoArray.push({ text: newItemText, checked: false }); // update the todoArray
-        displayTodoList(todoArray); // calling the display function
+        displayTaskList(todoArray); // calling the display function
         writeToStorage(); // calling the write storage function
     }
     addBtn.blur();
@@ -155,7 +155,7 @@ resetBtn.addEventListener("click", function () {
     todoArray.forEach(function (item) {
         item.checked = false;
     });
-    displayTodoList(todoArray); // calling the display function
+    displayTaskList(todoArray); // calling the display function
     writeToStorage(); // calling the write storage function
     resetBtn.blur();
 });
@@ -168,7 +168,7 @@ deleteBtn.addEventListener("click", function () {
         let confValue = confirm("Are you sure you want to permanently delete all item on the todo list?");
         if (confValue === true) {
             todoArray = []; // empty the todoArray
-            basicMessage(); // empty the todo list container & display the basic message
+            noTaskMessage(); // empty the todo list container & display the basic message
             localStorage.removeItem("todoList"); // empty the local storage
         }
     }
@@ -176,18 +176,18 @@ deleteBtn.addEventListener("click", function () {
 });
 
 // edit a todo item's text (rename)
-function renameItem(liItem) {
-    let id = liItem.parentElement.id;
+function taskRename(textItem) {
+    let id = textItem.parentElement.id;
     let newText = prompt("Enter the new text:", todoArray[id].text);
     if (newText !== "" && newText !== null) {
         todoArray[id].text = newText;
-        displayTodoList(todoArray); // calling the display function
+        displayTaskList(todoArray); // calling the display function
         writeToStorage(); // calling the write storage function
     }
 }
 
 // display a basic message if the todo list is empty
-function basicMessage() {
+function noTaskMessage() {
     todoListCont.innerHTML = "";
     let title = document.createElement("h2");
     title.textContent = "Nothing to do for now...";
