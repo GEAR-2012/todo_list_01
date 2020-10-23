@@ -36,6 +36,8 @@ function displayTodoList(listArr) {
     if (listArr.length !== 0) {
         listArr.forEach(function (item, index) {
             /*
+            LIST ITEM TEMPLATE:
+            
                 <li class="list-item">
                     <div class="chkbox-cont">
                         <label class="chkbox-lbl" for="chk-1"></label>
