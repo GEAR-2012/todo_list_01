@@ -124,6 +124,7 @@ function taskDone(box) {
     let todoTextItem = box.parentElement.parentElement.childNodes[1]; // get the actual text item
     let iconUnchecked = box.parentElement.childNodes[2]; // get the actual unchecked icon
     let iconChecked = box.parentElement.childNodes[3]; // get the actual checked icon
+    console.log(iconUnchecked, iconChecked);
     // update css classes based on states
     iconUnchecked.classList.toggle("hide"); // update css class on icon unchecked
     iconChecked.classList.toggle("hide"); // update css class on icon checked
